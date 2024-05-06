@@ -14,7 +14,7 @@
 /* GLOBALS */
 
 //'skipAPple' flag
-BOOL skipApple = NO;
+BOOL skipSystem = NO;
 
 //filter string
 NSString* filterBy = nil;

@@ -17,10 +17,8 @@ int main(int argc, const char * argv[]) {
         NSArray* arguments = nil;
         
         arguments = [[NSProcessInfo processInfo] arguments];
-//        processArgs(arguments);
-        if(arguments.count > 1){
-            attack = arguments[1];
-        }
+        processArgs(arguments);
+
         if (arguments != nil){
             if (monitor() != true){
                 goto bail;
@@ -42,26 +40,44 @@ BOOL processArgs(NSArray* arguments){
     BOOL validArgs = YES;
     NSUInteger index = 0;
     
+    skipSystem = [arguments containsObject:@"skipSystem"];
+    
     index = [arguments indexOfObject:@"keylog"];
-    if(NSNotFound != index)
-    {
-        //inc
-        index++;
-        
-        //sanity check
-        // make sure name comes after
-        if(index >= arguments.count)
-        {
-            //invalid
-            validArgs = NO;
-            
-            //bail
-            goto bail;
-        }
-        
-        //grab filter name
-        attack = [arguments objectAtIndex:index];
+    if(NSNotFound != index){
+            attack = arguments[index];
+//            attack = [arguments objectAtIndex:index];
     }
+    
+    NSLog(@"attack : %@", attack);
+    printf("SkipSystem : %s\n", skipSystem ? "true" : "false");
+
+//    if(arguments.count > 1){
+//        attack = arguments[1];
+//            NSLog(@"Array: %@", arguments);
+//            printf("Count: %d\n", arguments.count);
+//            NSLog(@"%@", arguments[5]);
+//    }
+    
+//    index = [arguments indexOfObject:@"attack"];
+//    if(NSNotFound != index)
+//    {
+//        //inc
+//        index++;
+//        
+//        //sanity check
+//        // make sure name comes after
+//        if(index >= arguments.count)
+//        {
+//            //invalid
+//            validArgs = NO;
+//            
+//            //bail
+//            goto bail;
+//        }
+//        
+//        //grab filter name
+//        attack = [arguments objectAtIndex:index];
+//    }
     
 
 
@@ -80,8 +96,14 @@ BOOL monitor(){
     FileCallbackBlock block = ^(File* file)
     {
         
+        if((YES == skipSystem) && (YES == file.process.isPlatformBinary.boolValue))
+        {
+            return;
+        }
+        
 //        [arg1 isEqualToString:@"help"]
         if([attack isEqualToString:@"keylog"]){
+            printf("in");
             if( (YES != [file.sourcePath hasSuffix:@"IOHIDLib"]) &&
                (YES != [file.destinationPath hasSuffix:@"IOHIDLib"]))
             {
