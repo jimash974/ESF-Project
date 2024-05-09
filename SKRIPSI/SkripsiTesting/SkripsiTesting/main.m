@@ -41,6 +41,7 @@ BOOL processArgs(NSArray* arguments){
     NSUInteger index = 0;
     
     skipSystem = [arguments containsObject:@"skipSystem"];
+    skipRedCan = [arguments containsObject:@"skipRedCan"];
     
     index = [arguments indexOfObject:@"keylog"];
     if(NSNotFound != index){
@@ -89,7 +90,7 @@ bail:
 
 BOOL monitor(){
     
-    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_CLOSE};
+    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_CLOSE, ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED, ES_EVENT_TYPE_NOTIFY_XP_MALWARE_REMEDIATED};
     
     FileMonitor* monitor = [[FileMonitor alloc] init];
     
@@ -99,6 +100,12 @@ BOOL monitor(){
         if((YES == skipSystem) && (YES == file.process.isPlatformBinary.boolValue))
         {
             return;
+        }
+        
+        if(YES == skipRedCan){
+            if((YES == [file.process.name isEqualToString:@"com.redcanary.agent.securityextension"]) || (YES == [file.process.name isEqualToString:@"com.crowdstrike.falcon.Agent"])){
+                return;
+            }
         }
         
 //        [arg1 isEqualToString:@"help"]

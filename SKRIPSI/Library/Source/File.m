@@ -244,6 +244,10 @@ bail:
             [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_UNLINK\","];
             break;
             
+        case ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED\","];
+            break;
+            
             
             
         default:

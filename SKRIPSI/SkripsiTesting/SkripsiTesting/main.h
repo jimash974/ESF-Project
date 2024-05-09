@@ -16,6 +16,9 @@
 //'skipAPple' flag
 BOOL skipSystem = NO;
 
+//'skipRedCan' flag
+BOOL skipRedCan = NO;
+
 //filter string
 NSString* filterBy = nil;
 
