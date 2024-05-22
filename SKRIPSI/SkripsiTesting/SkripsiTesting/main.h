@@ -23,7 +23,7 @@ BOOL skipRedCan = NO;
 NSString* filterBy = nil;
 
 //'prettyPrint' flag
-BOOL prettyPrint = NO;
+BOOL printJSON = NO;
 
 //'prettyPrint' flag
 NSString* attack = nil;

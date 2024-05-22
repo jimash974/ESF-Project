@@ -40,8 +40,9 @@ BOOL processArgs(NSArray* arguments){
     BOOL validArgs = YES;
     NSUInteger index = 0;
     
-    skipSystem = [arguments containsObject:@"skipSystem"];
-    skipRedCan = [arguments containsObject:@"skipRedCan"];
+    skipSystem = [arguments containsObject:@"-skipSystem"];
+    skipRedCan = [arguments containsObject:@"-skipRedCan"];
+    printJSON = [arguments containsObject:@"-printJSON"];
     
     index = [arguments indexOfObject:@"keylog"];
     if(NSNotFound != index){
@@ -102,8 +103,9 @@ BOOL monitor(){
             return;
         }
         
+//        Red Canary Mac Monitor
         if(YES == skipRedCan){
-            if((YES == [file.process.name isEqualToString:@"com.redcanary.agent.securityextension"]) || (YES == [file.process.name isEqualToString:@"com.crowdstrike.falcon.Agent"])){
+            if((YES == [file.process.name isEqualToString:@"com.redcanary.agent.securityextension"]) || (YES == [file.process.name isEqualToString:@"com.crowdstrike.falcon.Agent"]) || (YES == [file.process.name isEqualToString:@"Red Canary Mac Monitor"])){
                 return;
             }
         }
@@ -123,9 +125,80 @@ BOOL monitor(){
             }
         }
         else{
-            printf("%s\n\n", file.description.UTF8String);
+            if(YES == printJSON){
+                printf("%s\n", prettifyJSON(file.description).UTF8String);
+            }
+            else{
+                printf("%s\n\n", file.description.UTF8String);
+            }
+            
+            
         }
         
     };
     return [monitor start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic callback:block];
+}
+
+//prettify JSON
+NSString* prettifyJSON(NSString* output)
+{
+    //data
+    NSData* data = nil;
+    
+    //error
+    NSError* error = nil;
+    
+    //object
+    id object = nil;
+    
+    //pretty data
+    NSData* prettyData = nil;
+    
+    //pretty string
+    NSString* prettyString = nil;
+    
+    //covert to data
+    data = [output dataUsingEncoding:NSUTF8StringEncoding];
+   
+    //convert to JSON
+    // wrap since we are serializing JSON
+    @try
+    {
+        //serialize
+        object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if(nil == object)
+        {
+            //bail
+            goto bail;
+        }
+        
+        //covert to pretty data
+        prettyData = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&error];
+        if(nil == prettyData)
+        {
+            //bail
+            goto bail;
+        }
+    }
+    //ignore exceptions (here)
+    @catch(NSException *exception)
+    {
+        //bail
+        goto bail;
+    }
+    
+    //convert to string
+    // note, we manually unescape forward slashes
+    prettyString = [[[NSString alloc] initWithData:prettyData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+   
+bail:
+    
+    //error?
+    if(nil == prettyString)
+    {
+        //init error
+        prettyString = @"{\"error\" : \"failed to convert output to JSON\"}";
+    }
+    
+    return prettyString;
 }
