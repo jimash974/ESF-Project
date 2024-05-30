@@ -8,11 +8,11 @@
 /* GLOBALS */
 
 //endpoint client
-es_client_t* endpointClient = nil;
+es_client_t* endpointClientFM = nil;
 
 //pointer to function
 // responsibility_get_pid_responsible_for_pid()
-pid_t (*getRPID)(pid_t pid) = NULL;
+pid_t (*fileMonitor_getRPID)(pid_t pid) = NULL;
 
 //process cache
 NSCache* processCache = NULL;
@@ -41,7 +41,7 @@ NSCache* processCache = NULL;
         arguments = [NSMutableDictionary dictionary];
         
         //get function pointer
-        getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
+        fileMonitor_getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
         
         //init process cache
         processCache = [[NSCache alloc] init];
@@ -69,7 +69,7 @@ NSCache* processCache = NULL;
     
     //create client
     // callback invoked on file events
-    result = es_new_client(&endpointClient, ^(es_client_t *client, const es_message_t *message)
+    result = es_new_client(&endpointClientFM, ^(es_client_t *client, const es_message_t *message)
     {
         //new file obj
         File* file = nil;
@@ -135,7 +135,7 @@ NSCache* processCache = NULL;
     }
     
     //clear cache
-    if(ES_CLEAR_CACHE_RESULT_SUCCESS != es_clear_cache(endpointClient))
+    if(ES_CLEAR_CACHE_RESULT_SUCCESS != es_clear_cache(endpointClientFM))
     {
         //err msg
         NSLog(@"ERROR: es_clear_cache() failed");
@@ -147,10 +147,10 @@ NSCache* processCache = NULL;
     //mute self
     // note: you might not want this, but for a cmdline-based filemonitor
     //       this ensures we don't constantly report writes to current /dev/tty
-    es_mute_path_literal(endpointClient, [NSProcessInfo.processInfo.arguments[0] UTF8String]);
+    es_mute_path_literal(endpointClientFM, [NSProcessInfo.processInfo.arguments[0] UTF8String]);
     
     //subscribe
-    if(ES_RETURN_SUCCESS != es_subscribe(endpointClient, events, count))
+    if(ES_RETURN_SUCCESS != es_subscribe(endpointClientFM, events, count))
     {
         //err msg
         NSLog(@"ERROR: es_subscribe() failed");
@@ -203,10 +203,10 @@ bail:
     {
         
     //unsubscribe & delete
-    if(NULL != endpointClient)
+    if(NULL != endpointClientFM)
     {
        //unsubscribe
-       if(ES_RETURN_SUCCESS != es_unsubscribe_all(endpointClient))
+       if(ES_RETURN_SUCCESS != es_unsubscribe_all(endpointClientFM))
        {
            //err msg
            NSLog(@"ERROR: es_unsubscribe_all() failed");
@@ -216,7 +216,7 @@ bail:
        }
        
        //delete
-       if(ES_RETURN_SUCCESS != es_delete_client(endpointClient))
+       if(ES_RETURN_SUCCESS != es_delete_client(endpointClientFM))
        {
            //err msg
            NSLog(@"ERROR: es_delete_client() failed");
@@ -226,7 +226,7 @@ bail:
        }
        
        //unset
-       endpointClient = NULL;
+       endpointClientFM = NULL;
        
        //happy
        stopped = YES;

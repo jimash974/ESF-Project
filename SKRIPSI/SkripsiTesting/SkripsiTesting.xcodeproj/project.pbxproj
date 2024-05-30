@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		581D67672C06F1AD001900FE /* libProcessMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 581D67622C06251E001900FE /* libProcessMonitor.a */; };
+		581D67692C06F6AA001900FE /* libFileMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 581D67682C06F6AA001900FE /* libFileMonitor.a */; };
 		5842A83A2BBBB95400EB7D71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842A8392BBBB95400EB7D71 /* AppDelegate.m */; };
 		5842A83D2BBBB95400EB7D71 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842A83C2BBBB95400EB7D71 /* ViewController.m */; };
 		5842A83F2BBBB95500EB7D71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5842A83E2BBBB95500EB7D71 /* Assets.xcassets */; };
@@ -14,10 +16,11 @@
 		5842A8442BBBB95500EB7D71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842A8432BBBB95500EB7D71 /* main.m */; };
 		5842A84D2BBBB9F400EB7D71 /* libbsm.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5842A84C2BBBB9F400EB7D71 /* libbsm.tbd */; };
 		5842A84F2BBBB9FA00EB7D71 /* libEndpointSecurity.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5842A84E2BBBB9FA00EB7D71 /* libEndpointSecurity.tbd */; };
-		5842A8512BBBBA1A00EB7D71 /* libFileMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5842A8502BBBBA1A00EB7D71 /* libFileMonitor.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		581D67622C06251E001900FE /* libProcessMonitor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libProcessMonitor.a; path = ../Library/Release/libProcessMonitor.a; sourceTree = "<group>"; };
+		581D67682C06F6AA001900FE /* libFileMonitor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFileMonitor.a; path = ../Library/Release/libFileMonitor.a; sourceTree = "<group>"; };
 		5842A8352BBBB95400EB7D71 /* SkripsiTesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkripsiTesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5842A8382BBBB95400EB7D71 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5842A8392BBBB95400EB7D71 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -38,7 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5842A8512BBBBA1A00EB7D71 /* libFileMonitor.a in Frameworks */,
+				581D67672C06F1AD001900FE /* libProcessMonitor.a in Frameworks */,
+				581D67692C06F6AA001900FE /* libFileMonitor.a in Frameworks */,
 				5842A84F2BBBB9FA00EB7D71 /* libEndpointSecurity.tbd in Frameworks */,
 				5842A84D2BBBB9F400EB7D71 /* libbsm.tbd in Frameworks */,
 			);
@@ -83,6 +87,8 @@
 		5842A84B2BBBB9F400EB7D71 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				581D67682C06F6AA001900FE /* libFileMonitor.a */,
+				581D67622C06251E001900FE /* libProcessMonitor.a */,
 				5842A8502BBBBA1A00EB7D71 /* libFileMonitor.a */,
 				5842A84E2BBBB9FA00EB7D71 /* libEndpointSecurity.tbd */,
 				5842A84C2BBBB9F400EB7D71 /* libbsm.tbd */,
@@ -317,6 +323,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../Library/Release;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = testingapp.SkripsiTesting;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -10,6 +10,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FileMonitor.h"
+//#import "Process"
 
 /* GLOBALS */
 
@@ -28,6 +29,9 @@ BOOL printJSON = NO;
 //'prettyPrint' flag
 NSString* attack = nil;
 
+//'parseEnv' flag to capture environment variable information
+BOOL parseEnv = NO;
+
 /* FUNCTIONS */
 
 //process user-specifed args
@@ -36,8 +40,11 @@ BOOL processArgs(NSArray* arguments);
 //print usage
 void usage(void);
 
-//monitor
-BOOL monitor(void);
+// File Monitor
+BOOL fileMonitor(void);
+
+// Process Monitor
+BOOL processMonitor(void);
 
 //prettify JSON
 NSString* prettifyJSON(NSString* output);

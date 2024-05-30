@@ -3,9 +3,9 @@
 #import <bsm/libbsm.h>
 #import <sys/sysctl.h>
 
-#import "signing.h"
+#import "signing2.h"
 #import "utilities.h"
-#import "FileMonitor.h"
+#import "ProcessMonitor.h"
 
 //hash length
 // from: cs_blobs.h
@@ -14,15 +14,15 @@
 /* GLOBALS */
 
 //responsbile pid
-extern pid_t (*fileMonitor_getRPID)(pid_t pid);
+extern pid_t (*getRPID)(pid_t pid);
 
 /* FUNCTIONS */
 
 //helper function
 // get parent of arbitrary process
-pid_t fileMonitor_getParentID(pid_t child);
+pid_t getParentID(pid_t child);
 
-@implementation Process
+@implementation Process2
 
 @synthesize pid;
 @synthesize exit;
@@ -37,8 +37,8 @@ pid_t fileMonitor_getParentID(pid_t child);
 @synthesize architecture;
 
 //init
-// flag controls code signing options
--(id)init:(es_message_t*)message csOption:(NSUInteger)csOption
+// flag controls code signing options and environment variable collection
+-(id)init:(es_message_t*)message csOption:(NSUInteger)csOption parseEnv:(BOOL)parseEnv
 {
     //init super
     self = [super init];
@@ -54,6 +54,9 @@ pid_t fileMonitor_getParentID(pid_t child);
         //alloc array for args
         self.arguments = [NSMutableArray array];
         
+        //alloc dictionary for environment variables if flag is set
+        self.environment = parseEnv ? [NSMutableDictionary dictionary] : nil;
+        
         //alloc array for parents
         self.ancestors = [NSMutableArray array];
         
@@ -61,7 +64,7 @@ pid_t fileMonitor_getParentID(pid_t child);
         self.signingInfo = [NSMutableDictionary dictionary];
         
         //get function pointer
-        fileMonitor_getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
+        getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
         
         //init exit
         self.exit = -1;
@@ -85,7 +88,6 @@ pid_t fileMonitor_getParentID(pid_t child);
         switch (message->event_type) {
             
             //exec
-            case ES_EVENT_TYPE_AUTH_EXEC:
             case ES_EVENT_TYPE_NOTIFY_EXEC:
                 
                 //set process (target)
@@ -93,6 +95,12 @@ pid_t fileMonitor_getParentID(pid_t child);
                 
                 //extract/format args
                 [self extractArgs:&message->event];
+                
+                //extract/format environment variables
+                if(parseEnv)
+                {
+                    [self extractEnvironment:&message->event];
+                }
                 
                 break;
                 
@@ -191,7 +199,7 @@ pid_t fileMonitor_getParentID(pid_t child);
 -(void)generateCSInfo:(NSUInteger)csOption
 {
     //generate via helper function
-    self.signingInfo = generateSigningInfo(self, csOption, kSecCSDefaultFlags);
+    self.signingInfo = generateSigningInfo2(self, csOption, kSecCSDefaultFlags);
     
     return;
 }
@@ -377,6 +385,36 @@ bail:
     return;
 }
 
+//extract/format environment variables
+-(void)extractEnvironment:(es_events_t *)event
+{
+    NSString* envString = nil;
+    NSString* keyString = nil;
+    NSString* valueString = nil;
+    
+    uint32_t count = es_exec_env_count(&event->exec);
+    for (uint32_t i = 0; i < count; i++)
+    {
+        keyString = nil;
+        valueString = nil;
+        
+        //extract current env
+        es_string_token_t currentEnv = es_exec_env(&event->exec, i);
+        
+        //convert string token to env string
+        envString = convertStringToken(&currentEnv);
+        if(envString != nil)
+        {
+            //convert env string to key and value
+            convertEnvironmentVariableStringToKeyValue(envString, &keyString, &valueString);
+            if(keyString != nil && valueString != nil)
+            {
+                [self.environment setObject:valueString forKey:keyString];
+            }
+        }
+    }
+}
+
 //generate list of ancestors
 // note: if possible, built off responsible pid (vs. parent)
 -(void)enumerateAncestors
@@ -395,10 +433,10 @@ bail:
     }
     //no rpid
     // try lookup via private API
-    else if(NULL != fileMonitor_getRPID)
+    else if(NULL != getRPID)
     {
         //get rpid
-        parentPID = fileMonitor_getRPID(pid);
+        parentPID = getRPID(pid);
     }
     
     //couldn't find/get rPID?
@@ -421,10 +459,10 @@ bail:
     {
         //for parent
         // first try via rPID
-        if(NULL != fileMonitor_getRPID)
+        if(NULL != getRPID)
         {
             //get rpid
-            parentPID = fileMonitor_getRPID(currentPID);
+            parentPID = getRPID(currentPID);
         }
         
         //couldn't find/get rPID?
@@ -433,7 +471,7 @@ bail:
             (currentPID == parentPID) )
         {
             //get parent pid
-            parentPID = fileMonitor_getParentID(currentPID);
+            parentPID = getParentID(currentPID);
         }
         
         //done?
@@ -467,6 +505,37 @@ bail:
 
     //init output string
     description = [NSMutableString string];
+
+    //start JSON
+    [description appendString:@"{"];
+
+    //add event
+    [description appendString:@"\"event\":"];
+
+    //add event
+    switch(self.event)
+    {
+        //exec
+        case ES_EVENT_TYPE_NOTIFY_EXEC:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXEC\","];
+            break;
+            
+        //fork
+        case ES_EVENT_TYPE_NOTIFY_FORK:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORK\","];
+            break;
+            
+        //exit
+        case ES_EVENT_TYPE_NOTIFY_EXIT:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXIT\","];
+            break;
+            
+        default:
+            break;
+    }
+
+    //add timestamp
+    [description appendFormat:@"\"timestamp\":\"%@\",", self.timestamp];
 
     //start process
     [description appendString:@"\"process\":{"];
@@ -524,6 +593,35 @@ bail:
     {
        //add empty list
        [description appendFormat:@"\"arguments\":[],"];
+    }
+    
+    //environment
+    if(nil != self.environment && 0 != self.environment.count)
+    {
+       //start list
+       [description appendFormat:@"\"environment\":{"];
+       
+       //add all environment variables
+       [self.environment enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL * _Nonnull stop) {
+           //add key and encode double quotes
+           [description appendFormat:@"\"%@\":", [key stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]];
+           //add value
+           [description appendFormat:@"\"%@\",", [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]];
+       }];
+       //remove last ','
+       if(YES == [description hasSuffix:@","])
+       {
+           //remove
+           [description deleteCharactersInRange:NSMakeRange([description length]-1, 1)];
+       }
+       //terminate object
+       [description appendString:@"},"];
+    }
+    //parseEnv specified but empty environment
+    else if (nil != self.environment)
+    {
+       //add empty object
+       [description appendFormat:@"\"environment\":{},"];
     }
 
     //add ppid
@@ -708,6 +806,9 @@ bail:
     //terminate process
     [description appendString:@"}"];
 
+    //terminate entire JSON
+    [description appendString:@"}"];
+
     return description;
 }
 
@@ -715,7 +816,7 @@ bail:
 
 //helper function
 // get parent of arbitrary process
-pid_t fileMonitor_getParentID(pid_t child)
+pid_t getParentID(pid_t child)
 {
     //parent id
     pid_t parentID = -1;

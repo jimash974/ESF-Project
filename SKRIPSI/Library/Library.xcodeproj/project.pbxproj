@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		581D67542BFF25BF001900FE /* ProcessMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D67522BFF25BF001900FE /* ProcessMonitor.m */; };
+		581D67552BFF25BF001900FE /* ProcessMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 581D67532BFF25BF001900FE /* ProcessMonitor.h */; };
+		581D675E2C0472EA001900FE /* Process2.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D675D2C0472EA001900FE /* Process2.m */; };
+		581D67612C047AA3001900FE /* signing2.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D67602C047AA3001900FE /* signing2.m */; };
 		CD68366F2394B50700CF19C1 /* signing.m in Sources */ = {isa = PBXBuildFile; fileRef = CD68366D2394B50700CF19C1 /* signing.m */; };
 		CD6836702394B50700CF19C1 /* signing.h in Headers */ = {isa = PBXBuildFile; fileRef = CD68366E2394B50700CF19C1 /* signing.h */; };
 		CDB7243D2374D915003A3364 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = CDB7243A2374D915003A3364 /* File.m */; };
@@ -17,6 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		581D67522BFF25BF001900FE /* ProcessMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessMonitor.m; sourceTree = "<group>"; };
+		581D67532BFF25BF001900FE /* ProcessMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessMonitor.h; sourceTree = "<group>"; };
+		581D675D2C0472EA001900FE /* Process2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Process2.m; sourceTree = "<group>"; };
+		581D675F2C047A71001900FE /* signing2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = signing2.h; sourceTree = "<group>"; };
+		581D67602C047AA3001900FE /* signing2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = signing2.m; sourceTree = "<group>"; };
 		CD68366D2394B50700CF19C1 /* signing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = signing.m; sourceTree = "<group>"; };
 		CD68366E2394B50700CF19C1 /* signing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signing.h; sourceTree = "<group>"; };
 		CDB7243A2374D915003A3364 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
@@ -62,8 +71,13 @@
 				CDB7243B2374D915003A3364 /* FileMonitor.h */,
 				CDB7243C2374D915003A3364 /* FileMonitor.m */,
 				CE91B74C231A129D003273AF /* Process.m */,
+				581D67532BFF25BF001900FE /* ProcessMonitor.h */,
+				581D67522BFF25BF001900FE /* ProcessMonitor.m */,
+				581D675D2C0472EA001900FE /* Process2.m */,
+				581D67602C047AA3001900FE /* signing2.m */,
 				CD68366E2394B50700CF19C1 /* signing.h */,
 				CD68366D2394B50700CF19C1 /* signing.m */,
+				581D675F2C047A71001900FE /* signing2.h */,
 				CE532DF7231C78E500B7DDD6 /* utilities.m */,
 				CE532DF9231C791B00B7DDD6 /* utilities.h */,
 			);
@@ -79,6 +93,7 @@
 			files = (
 				CD6836702394B50700CF19C1 /* signing.h in Headers */,
 				CDB7243E2374D915003A3364 /* FileMonitor.h in Headers */,
+				581D67552BFF25BF001900FE /* ProcessMonitor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,10 +175,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				581D67542BFF25BF001900FE /* ProcessMonitor.m in Sources */,
 				CDB7243F2374D915003A3364 /* FileMonitor.m in Sources */,
 				CD68366F2394B50700CF19C1 /* signing.m in Sources */,
 				CE532DF8231C78E500B7DDD6 /* utilities.m in Sources */,
+				581D675E2C0472EA001900FE /* Process2.m in Sources */,
 				CDB7243D2374D915003A3364 /* File.m in Sources */,
+				581D67612C047AA3001900FE /* signing2.m in Sources */,
 				CE91B74E231A129D003273AF /* Process.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

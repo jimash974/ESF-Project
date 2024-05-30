@@ -7,6 +7,7 @@
 
 #import "main.h"
 #import "FileMonitor.h"
+#import "ProcessMonitor.h"
 
 int main(int argc, const char * argv[]) {
     
@@ -20,7 +21,7 @@ int main(int argc, const char * argv[]) {
         processArgs(arguments);
 
         if (arguments != nil){
-            if (monitor() != true){
+            if (fileMonitor() != true && processMonitor() != true){
                 goto bail;
             }
 //            printf("%s\n", [attack UTF8String]);
@@ -89,7 +90,7 @@ bail:
 }
 
 
-BOOL monitor(){
+BOOL fileMonitor(){
     
     es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_CLOSE};
     
@@ -137,6 +138,61 @@ BOOL monitor(){
         
     };
     return [monitor start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic callback:block];
+}
+
+BOOL processMonitor()
+{
+    //(process) events of interest
+    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_EXIT};
+    
+    //init monitor
+    ProcessMonitor* procMon = [[ProcessMonitor alloc] init];
+    
+    //define block
+    // automatically invoked upon process events
+    ProcessCallbackBlock block = ^(Process2* process)
+    {
+        //do thingz
+        // e.g. process.event has event (exec, fork, exit)
+        // for now, we just print out the event and process object
+        
+        //ingore apple?
+        if( (YES == skipSystem) &&
+            (YES == process.isPlatformBinary.boolValue))
+        {
+            //ignore
+            return;
+        }
+        
+        //filter
+        // and no match? skip
+        if(0 != filterBy.length)
+        {
+            //check file paths & process
+            if(YES != [process.path hasSuffix:filterBy])
+            {
+                //ignore
+                return;
+            }
+        }
+    
+        //pretty print?
+        if(YES == printJSON)
+        {
+            //make me pretty!
+            printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+        }
+        else
+        {
+            //output
+            printf("%s\n\n", process.description.UTF8String);
+        }
+    };
+        
+    //start monitoring
+    // pass in events, count, and callback block for events
+    return [procMon start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic parseEnv:parseEnv callback:block];
+    return false;
 }
 
 //prettify JSON
