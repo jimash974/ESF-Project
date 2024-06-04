@@ -21,7 +21,15 @@ int main(int argc, const char * argv[]) {
         processArgs(arguments);
 
         if (arguments != nil){
-            if (fileMonitor() != true && processMonitor() != true){
+//            if ((fileMonitor() != true) && (processMonitor() != true)){
+//                goto bail;
+//            }
+            
+            if (fileMonitor() != true){
+                goto bail;
+            }
+            
+            if (processMonitor() != true){
                 goto bail;
             }
 //            printf("%s\n", [attack UTF8String]);
@@ -125,15 +133,25 @@ BOOL fileMonitor(){
                 printf("%s\n\n", file.description.UTF8String);
             }
         }
+        
+        if(AS_Ioc_Count == 2){
+            if([file.destinationPath hasSuffix:@"login.keychain-db"] == YES){
+                AS_Ioc_Count = 3;
+                printf("Atomic Stealer Detected (3/3)\n\n");
+                printf("%s\n", prettifyJSON(file.description).UTF8String);
+                return;
+            }
+        }
+        
         else{
             if(YES == printJSON){
-                printf("%s\n", prettifyJSON(file.description).UTF8String);
+//                printf("FILE\n");
+//                printf("%s\n", prettifyJSON(file.description).UTF8String);
             }
             else{
-                printf("%s\n\n", file.description.UTF8String);
+//                printf("FILE\n");
+//                printf("%s\n\n", file.description.UTF8String);
             }
-            
-            
         }
         
     };
@@ -155,7 +173,7 @@ BOOL processMonitor()
         //do thingz
         // e.g. process.event has event (exec, fork, exit)
         // for now, we just print out the event and process object
-        
+
         //ingore apple?
         if( (YES == skipSystem) &&
             (YES == process.isPlatformBinary.boolValue))
@@ -179,13 +197,67 @@ BOOL processMonitor()
         //pretty print?
         if(YES == printJSON)
         {
+//            printf("IN2");
             //make me pretty!
-            printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+//            printf("PROCESS\n");
+            
+//            printf("%s\n\n", process.description.UTF8String);
+//            printf("==================");
+//            printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+//            printf("%s\n\n", prettifyJSON(process.arguments).UTF8String);
         }
         else
         {
+//            printf("IN2");
             //output
+            printf("PROCESS\n");
             printf("%s\n\n", process.description.UTF8String);
+            
+//            NSLog(@"%@\n\n", process.arguments);
+        }
+        
+        
+//        ATOMIC STEALER
+        if(AS_Ioc_Count == 0){
+            if((YES == [process.name isEqualToString:@"osascript"])&&(process.arguments.count > 2)){
+                NSString *ioc1 = process.arguments[2];
+
+                if(([ioc1 rangeOfString:@"password"].location != NSNotFound) && ([ioc1 rangeOfString:@"display dialog"].location != NSNotFound)){
+                    
+                    AS_Pid = process.ppid;
+                    
+                    AS_Ioc_Count = 1;
+    //                NSLog(@"true");
+//                    NSLog(@"Process name : %@\n", process.name);
+//                    NSLog(@"Count : %d\n", AS_Ioc_Count);
+//                    NSLog(@"PID ioc : %d\n", AS_Pid);
+                    
+//                    printf("PROCESS\n");
+                    printf("Atomic Stealer Detected (1/3)\n\n");
+                    printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+                    return;
+                }
+            }
+        }
+
+        
+        if(AS_Ioc_Count == 1){
+            if(YES == [process.name isEqualToString:@"dscl"] && (process.arguments.count > 2) && (AS_Pid == process.ppid)){
+                NSLog(@"dscl");
+
+                NSString *ioc1 = process.arguments[1];
+                NSString *ioc2 = process.arguments[2];
+                
+                if(([ioc1 rangeOfString:@"Local"].location != NSNotFound) && ([ioc1 rangeOfString:@"Default"].location != NSNotFound) && ([ioc2 rangeOfString:@"-authonly"].location != NSNotFound)){
+                    NSLog(@"Local Default");
+                    AS_Ioc_Count = 2;
+                    
+//                    printf("PROCESS\n");
+                    printf("Atomic Stealer Detected (2/3)\n\n");
+                    printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+                    return;
+                }
+            }
         }
     };
         
@@ -195,66 +267,77 @@ BOOL processMonitor()
     return false;
 }
 
-//prettify JSON
 NSString* prettifyJSON(NSString* output)
 {
-    //data
+    // Data
     NSData* data = nil;
     
-    //error
+    // Error
     NSError* error = nil;
     
-    //object
+    // Object
     id object = nil;
     
-    //pretty data
+    // Pretty data
     NSData* prettyData = nil;
     
-    //pretty string
+    // Pretty string
     NSString* prettyString = nil;
     
-    //covert to data
-    data = [output dataUsingEncoding:NSUTF8StringEncoding];
+    // Replace problematic newlines and other special characters
+    NSString *correctedOutput = [output stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];
+//    correctedOutput = [correctedOutput stringByReplacingOccurrencesOfString:@"\t" withString:@"\\t"];
+//    correctedOutput = [correctedOutput stringByReplacingOccurrencesOfString:@"\r" withString:@"\\r"];
+    
+    // Convert to data
+    data = [correctedOutput dataUsingEncoding:NSUTF8StringEncoding];
    
-    //convert to JSON
-    // wrap since we are serializing JSON
+    // Convert to JSON
     @try
     {
-        //serialize
+        // Serialize
         object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if(nil == object)
+        if (nil == object)
         {
-            //bail
+            // Bail
             goto bail;
         }
         
-        //covert to pretty data
+        // Convert to pretty data
         prettyData = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&error];
-        if(nil == prettyData)
+        if (nil == prettyData)
         {
-            //bail
+            // Bail
             goto bail;
         }
     }
-    //ignore exceptions (here)
-    @catch(NSException *exception)
+    // Ignore exceptions (here)
+    @catch (NSException *exception)
     {
-        //bail
+        // Bail
         goto bail;
     }
     
-    //convert to string
-    // note, we manually unescape forward slashes
-    prettyString = [[[NSString alloc] initWithData:prettyData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+    // Convert to string
+    prettyString = [[NSString alloc] initWithData:prettyData encoding:NSUTF8StringEncoding];
    
 bail:
     
-    //error?
-    if(nil == prettyString)
+    // Error?
+    if (nil == prettyString)
     {
-        //init error
+        // Init error
         prettyString = @"{\"error\" : \"failed to convert output to JSON\"}";
     }
     
     return prettyString;
 }
+
+
+
+
+
+
+
+
+

@@ -32,6 +32,10 @@ NSString* attack = nil;
 //'parseEnv' flag to capture environment variable information
 BOOL parseEnv = NO;
 
+//ATOMIC STELARE PROPERTIES
+int AS_Pid = 0;
+int AS_Ioc_Count = 0;
+
 /* FUNCTIONS */
 
 //process user-specifed args
