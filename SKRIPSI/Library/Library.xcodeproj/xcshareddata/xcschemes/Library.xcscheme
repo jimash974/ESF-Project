@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE91B73E231A0E6D003273AF"
-               BuildableName = "libFileMonitor.a"
+               BuildableName = "libMonitor.a"
                BlueprintName = "Library"
                ReferencedContainer = "container:Library.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE91B73E231A0E6D003273AF"
-            BuildableName = "libFileMonitor.a"
+            BuildableName = "libMonitor.a"
             BlueprintName = "Library"
             ReferencedContainer = "container:Library.xcodeproj">
          </BuildableReference>

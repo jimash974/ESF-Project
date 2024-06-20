@@ -52,6 +52,7 @@ BOOL processArgs(NSArray* arguments){
     skipSystem = [arguments containsObject:@"-skipSystem"];
     skipRedCan = [arguments containsObject:@"-skipRedCan"];
     printJSON = [arguments containsObject:@"-printJSON"];
+    all = [arguments containsObject:@"-all"];
     
     index = [arguments indexOfObject:@"keylog"];
     if(NSNotFound != index){
@@ -100,8 +101,8 @@ bail:
 
 BOOL fileMonitor(){
     
-    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_CLOSE};
-    
+    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_CLOSE, ES_EVENT_TYPE_NOTIFY_RENAME};
+
     FileMonitor* monitor = [[FileMonitor alloc] init];
     
     FileCallbackBlock block = ^(File* file)
@@ -121,7 +122,7 @@ BOOL fileMonitor(){
         
 //        [arg1 isEqualToString:@"help"]
         if([attack isEqualToString:@"keylog"]){
-            printf("in");
+//            printf("in");
             if( (YES != [file.sourcePath hasSuffix:@"IOHIDLib"]) &&
                (YES != [file.destinationPath hasSuffix:@"IOHIDLib"]))
             {
@@ -130,7 +131,7 @@ BOOL fileMonitor(){
             }
             else{
                 printf("IOC : Keylog  detected\n");
-                printf("%s\n\n", file.description.UTF8String);
+                printf("%s\n\n", prettifyJSON(file.description).UTF8String);
             }
         }
         
@@ -138,22 +139,105 @@ BOOL fileMonitor(){
             if([file.destinationPath hasSuffix:@"login.keychain-db"] == YES){
                 AS_Ioc_Count = 3;
                 printf("Atomic Stealer Detected (3/3)\n\n");
-                printf("%s\n", prettifyJSON(file.description).UTF8String);
+                printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
                 return;
             }
         }
         
-        else{
-            if(YES == printJSON){
-//                printf("FILE\n");
+        if(LB_Ioc_Count == 0){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME){
 //                printf("%s\n", prettifyJSON(file.description).UTF8String);
+                if([file.destinationPath hasSuffix:@".lockbit"] == YES){
+                    LB_Ioc_Count = 1;
+                    printf("Lockbit Detected (1/2)\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                    return;
+                }
             }
+            
             else{
-//                printf("FILE\n");
-//                printf("%s\n\n", file.description.UTF8String);
+                if(YES == printJSON){
+//                    printf("FILE\n");
+//                    printf("%s\n", prettifyJSON(file.description).UTF8String);
+    //                printf("==================");
+    //                printf("%s\n\n", file.description.UTF8String);
+                }
+                else{
+//                    printf("FILE\n");
+//                    printf("%s\n", prettifyJSON(file.description).UTF8String);
+    //                printf("%s\n\n", file.description.UTF8String);
+                }
             }
         }
         
+//        if(GM_Ioc_Count == 0){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+                if(([file.destinationPath rangeOfString:@"root"].location != NSNotFound) && ([file.destinationPath rangeOfString:@"CorelDRAW"].location != NSNotFound)){
+                    GM_Ioc_Count = 1;
+                    printf("Gimick Detected\n Malicious Folder Created\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                }
+            }
+//        }
+        
+        
+//        if(GM_Ioc_Count == 1){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+                if(YES == [file.destinationPath isEqualToString:@"/Library/LaunchDaemons/.dat.nosyns2638.RKoEMI"]){
+                    GM_Ioc_Count = 2;
+                    printf("Gimick Detected\n Launch Daemons Created\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                }
+            }
+            
+//        }
+        
+        
+//        if(GM_Ioc_Count == 2){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME){
+                if(YES == [file.destinationPath hasPrefix:@"/Library/LaunchDaemons/com.CorelDRAW.va.plist"]){
+                    GM_Ioc_Count = 3;
+                    printf("Gimick Detected\n Launch Daemons Renamed\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                }
+            }
+//        }
+        
+//        if(VPN_Ioc_Count == 0){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+                if(YES == [file.destinationPath hasSuffix:@".androids"]){
+//                    VPN_Ioc_Count = 1;
+                    printf("VPN Detected Trojan\n Creation Of Hidden Folder\n\n");
+                    printf("File Destination Path : %s\n", [file.destinationPath UTF8String]);
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                    return;
+                }
+            }
+//        }
+        
+
+
+//        else if(VPN_Ioc_Count == 2){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+                if((YES == [file.destinationPath hasSuffix:@"softwareupdated"]) || (YES == [file.destinationPath hasSuffix:@"covid"])){
+//                    VPN_Ioc_Count = 3;
+                    printf("VPN Detected Trojan\n Creation of Malicious File\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                    return;
+                }
+            }
+//        }
+        
+        if (YES == all){
+            printf("FILE\n");
+            printf("%s\n", prettifyJSON(file.description).UTF8String);
+        }
+        
+//        if(LB_Ioc_Count == 1){
+//            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+//                if([file.destinationPath rangeOfString:@"restore"])
+//            }
+//        }
     };
     return [monitor start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic callback:block];
 }
@@ -161,7 +245,7 @@ BOOL fileMonitor(){
 BOOL processMonitor()
 {
     //(process) events of interest
-    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_EXIT};
+    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_EXIT, ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN};
     
     //init monitor
     ProcessMonitor* procMon = [[ProcessMonitor alloc] init];
@@ -174,6 +258,13 @@ BOOL processMonitor()
         // e.g. process.event has event (exec, fork, exit)
         // for now, we just print out the event and process object
 
+//        if(process.event == ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN){
+//            NSLog(@"Client Class %s", process.userClientClass);
+//        }
+//        if(process. == 3){
+//            printf("es");
+//        }
+        
         //ingore apple?
         if( (YES == skipSystem) &&
             (YES == process.isPlatformBinary.boolValue))
@@ -194,13 +285,22 @@ BOOL processMonitor()
             }
         }
     
+        
+        if (YES == all){
+            printf("PROCESStq : \n");
+            printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+            
+            printf("=================================== : \n");
+            
+            printf("%s\n\n", process.description.UTF8String);
+        }
+        
+
+        
         //pretty print?
         if(YES == printJSON)
         {
-//            printf("IN2");
-            //make me pretty!
-//            printf("PROCESS\n");
-            
+//            printf("PROCESStq : \n");
 //            printf("%s\n\n", process.description.UTF8String);
 //            printf("==================");
 //            printf("%s\n\n", prettifyJSON(process.description).UTF8String);
@@ -210,9 +310,8 @@ BOOL processMonitor()
         {
 //            printf("IN2");
             //output
-            printf("PROCESS\n");
-            printf("%s\n\n", process.description.UTF8String);
-            
+//            printf("PROCESS\n");
+//            printf("%s\n\n", process.description.UTF8String);
 //            NSLog(@"%@\n\n", process.arguments);
         }
         
@@ -234,7 +333,7 @@ BOOL processMonitor()
                     
 //                    printf("PROCESS\n");
                     printf("Atomic Stealer Detected (1/3)\n\n");
-                    printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+                    printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
                     return;
                 }
             }
@@ -249,16 +348,36 @@ BOOL processMonitor()
                 NSString *ioc2 = process.arguments[2];
                 
                 if(([ioc1 rangeOfString:@"Local"].location != NSNotFound) && ([ioc1 rangeOfString:@"Default"].location != NSNotFound) && ([ioc2 rangeOfString:@"-authonly"].location != NSNotFound)){
-                    NSLog(@"Local Default");
+//                    NSLog(@"Local Default");
                     AS_Ioc_Count = 2;
-                    
 //                    printf("PROCESS\n");
                     printf("Atomic Stealer Detected (2/3)\n\n");
-                    printf("%s\n\n", prettifyJSON(process.description).UTF8String);
+                    printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
                     return;
                 }
             }
         }
+        
+        
+//        if(VPN_Ioc_Count == 1){
+            if(process.event == ES_EVENT_TYPE_NOTIFY_EXEC){
+                for(NSString* string in process.arguments){
+                    if([string rangeOfString:@"46.137.201.254"].location != NSNotFound){
+                        printf("VPN Trojan Detected\n Access to Malicious IP \n\n");
+                        printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
+                        break;
+                    }
+                    else if([string rangeOfString:@"com.apple.softwareupdate.plist"].location != NSNotFound){
+                        printf("VPN Trojan Detected\n launch agent created\n\n");
+                        printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
+                        break;
+                    }
+                }
+                return;
+            }
+//        }
+        
+        
     };
         
     //start monitoring

@@ -35,6 +35,7 @@ pid_t getParentID(pid_t child);
 @synthesize auditToken;
 @synthesize signingInfo;
 @synthesize architecture;
+@synthesize userClientClass;
 
 //init
 // flag controls code signing options and environment variable collection
@@ -120,6 +121,19 @@ pid_t getParentID(pid_t child);
                 
                 //set exit code
                 self.exit = message->event.exit.stat;
+                
+                break;
+                
+            case ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN:
+                
+                //set process (target)
+                process = message->process;
+                
+//                let iokitOpen = message.pointee.event.iokit_open
+
+                const es_event_iokit_open_t iokit_open = message->event.iokit_open;
+
+                self.userClientClass = [NSString stringWithUTF8String:iokit_open.user_client_class.data];
                 
                 break;
             
@@ -517,17 +531,21 @@ bail:
     {
         //exec
         case ES_EVENT_TYPE_NOTIFY_EXEC:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXEC\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXECCCC\","];
             break;
             
         //fork
         case ES_EVENT_TYPE_NOTIFY_FORK:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORK\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORkkkkK\","];
             break;
             
         //exit
         case ES_EVENT_TYPE_NOTIFY_EXIT:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXIT\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXItttT\","];
+            break;
+            
+        case ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_IOKIT_OPEnnN\","];
             break;
             
         default:
@@ -536,6 +554,10 @@ bail:
 
     //add timestamp
     [description appendFormat:@"\"timestamp\":\"%@\",", self.timestamp];
+    
+    if(ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN == self.event){
+        [description appendFormat:@"\"user_client_class\":\"%@\",", self.userClientClass];
+    }
 
     //start process
     [description appendString:@"\"process\":{"];

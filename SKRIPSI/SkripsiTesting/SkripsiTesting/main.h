@@ -32,9 +32,25 @@ NSString* attack = nil;
 //'parseEnv' flag to capture environment variable information
 BOOL parseEnv = NO;
 
+// output all of the log
+BOOL all = NO;
+
 //ATOMIC STELARE PROPERTIES
 int AS_Pid = 0;
 int AS_Ioc_Count = 0;
+
+//Lock Bit
+//int LB = 0;
+int LB_Pid = 0;
+int LB_Ioc_Count = 0;
+
+// Gimmick
+int GM_Pid = 0;
+int GM_Ioc_Count = 0;
+
+// VPN
+int VPN_Pid = 0;
+int VPN_Ioc_Count = 0;
 
 /* FUNCTIONS */
 

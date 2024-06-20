@@ -67,6 +67,9 @@ typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
 //user id
 @property uid_t uid;
 
+//user id
+@property uid_t uidd;
+
 //event
 // exec, fork, exit
 @property u_int32_t event;
@@ -76,6 +79,9 @@ typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
 
 //exit code
 @property int exit;
+
+//user Client Class
+@property (nonatomic, retain)NSString* _Nullable userClientClass;
 
 //audit token
 @property(nonatomic, retain)NSData* _Nullable auditToken;

@@ -33,7 +33,7 @@
 		CDB7243C2374D915003A3364 /* FileMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileMonitor.m; sourceTree = "<group>"; };
 		CE532DF7231C78E500B7DDD6 /* utilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = utilities.m; sourceTree = "<group>"; };
 		CE532DF9231C791B00B7DDD6 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
-		CE91B73F231A0E6D003273AF /* libFileMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFileMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE91B73F231A0E6D003273AF /* libMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE91B74C231A129D003273AF /* Process.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Process.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,7 +59,7 @@
 		CE91B740231A0E6D003273AF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE91B73F231A0E6D003273AF /* libFileMonitor.a */,
+				CE91B73F231A0E6D003273AF /* libMonitor.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,7 +115,7 @@
 			);
 			name = Library;
 			productName = processMonitor;
-			productReference = CE91B73F231A0E6D003273AF /* libFileMonitor.a */;
+			productReference = CE91B73F231A0E6D003273AF /* libMonitor.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -305,7 +305,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = FileMonitor;
+				PRODUCT_NAME = Monitor;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -315,7 +315,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = FileMonitor;
+				PRODUCT_NAME = Monitor;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
