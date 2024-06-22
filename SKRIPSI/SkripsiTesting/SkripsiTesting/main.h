@@ -64,7 +64,7 @@ void usage(void);
 BOOL fileMonitor(void);
 
 // Process Monitor
-BOOL processMonitor(void);
+BOOL processMonitorr(void);
 
 //prettify JSON
 NSString* prettifyJSON(NSString* output);

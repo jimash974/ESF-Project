@@ -7,7 +7,9 @@
 
 #import "main.h"
 #import "FileMonitor.h"
-#import "ProcessMonitor.h"
+//#import "ProcessMonitor.h"
+//#import <ProcessMonitor.h>
+#import <ProcessMonitorr.h>
 
 int main(int argc, const char * argv[]) {
     
@@ -29,7 +31,7 @@ int main(int argc, const char * argv[]) {
                 goto bail;
             }
             
-            if (processMonitor() != true){
+            if (processMonitorr() != true){
                 goto bail;
             }
 //            printf("%s\n", [attack UTF8String]);
@@ -229,8 +231,8 @@ BOOL fileMonitor(){
 //        }
         
         if (YES == all){
-            printf("FILE\n");
-            printf("%s\n", prettifyJSON(file.description).UTF8String);
+//            printf("FILE\n");
+//            printf("%s\n", prettifyJSON(file.description).UTF8String);
         }
         
 //        if(LB_Ioc_Count == 1){
@@ -242,17 +244,18 @@ BOOL fileMonitor(){
     return [monitor start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic callback:block];
 }
 
-BOOL processMonitor()
+BOOL processMonitorr()
 {
     //(process) events of interest
     es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_EXEC, ES_EVENT_TYPE_NOTIFY_FORK, ES_EVENT_TYPE_NOTIFY_EXIT, ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN};
     
     //init monitor
-    ProcessMonitor* procMon = [[ProcessMonitor alloc] init];
+//    ProcessMonitor* procMon = [[ProcessMonitor alloc] init];
+    ProcessMonitorr* procMonn = [[ProcessMonitorr alloc] init];
     
     //define block
     // automatically invoked upon process events
-    ProcessCallbackBlock block = ^(Process2* process)
+    ProcessCallbackBlock block = ^(Process22* process)
     {
         //do thingz
         // e.g. process.event has event (exec, fork, exit)
@@ -377,12 +380,21 @@ BOOL processMonitor()
             }
 //        }
         
+        if(process.event == ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN){
+            if([process.userClientClass rangeOfString:@"IOHIDLibUserClient"].location != NSNotFound){
+                printf("Keylogger Detected\n IOHDILib Process detected \n\n");
+                printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
+                return;
+            }
+        }
+        
         
     };
         
     //start monitoring
     // pass in events, count, and callback block for events
-    return [procMon start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic parseEnv:parseEnv callback:block];
+//    return [procMon start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic parseEnv:parseEnv callback:block];
+    return [procMonn start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic parseEnv:parseEnv callback:block];
     return false;
 }
 

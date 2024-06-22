@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B9F73EC2C260DC900857D1E /* libMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B9F73EB2C260DC900857D1E /* libMonitor.a */; };
 		581D67672C06F1AD001900FE /* libProcessMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 581D67622C06251E001900FE /* libProcessMonitor.a */; };
 		581D67692C06F6AA001900FE /* libFileMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 581D67682C06F6AA001900FE /* libFileMonitor.a */; };
 		5842A83A2BBBB95400EB7D71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842A8392BBBB95400EB7D71 /* AppDelegate.m */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B9F73EB2C260DC900857D1E /* libMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		581D67622C06251E001900FE /* libProcessMonitor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libProcessMonitor.a; path = ../Library/Release/libProcessMonitor.a; sourceTree = "<group>"; };
 		581D67682C06F6AA001900FE /* libFileMonitor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFileMonitor.a; path = ../Library/Release/libFileMonitor.a; sourceTree = "<group>"; };
 		5842A8352BBBB95400EB7D71 /* SkripsiTesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkripsiTesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B9F73EC2C260DC900857D1E /* libMonitor.a in Frameworks */,
 				581D67672C06F1AD001900FE /* libProcessMonitor.a in Frameworks */,
 				581D67692C06F6AA001900FE /* libFileMonitor.a in Frameworks */,
 				5842A84F2BBBB9FA00EB7D71 /* libEndpointSecurity.tbd in Frameworks */,
@@ -87,6 +90,7 @@
 		5842A84B2BBBB9F400EB7D71 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1B9F73EB2C260DC900857D1E /* libMonitor.a */,
 				581D67682C06F6AA001900FE /* libFileMonitor.a */,
 				581D67622C06251E001900FE /* libProcessMonitor.a */,
 				5842A8502BBBBA1A00EB7D71 /* libFileMonitor.a */,

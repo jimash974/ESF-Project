@@ -7,7 +7,7 @@
 //get the signing info of a item
 // pid specified: extract dynamic code signing info
 // path specified: generate static code signing info
-NSMutableDictionary* generateSigningInfo(Process2* process, NSUInteger options, SecCSFlags flags)
+NSMutableDictionary* generateSigningInfo2(Process22* process, NSUInteger options, SecCSFlags flags)
 {
     //status
     OSStatus status = !errSecSuccess;
@@ -94,7 +94,7 @@ bail:
 }
 
 //extract signing info/check via dynamic code ref (process auth token)
-CFDictionaryRef dynamicCodeCheck2(Process2* process, SecCSFlags flags, NSMutableDictionary* signingInfo)
+CFDictionaryRef dynamicCodeCheck2(Process22* process, SecCSFlags flags, NSMutableDictionary* signingInfo)
 {
     //status
     OSStatus status = !errSecSuccess;
@@ -158,7 +158,7 @@ bail:
 }
 
 //extact signing info/check via static code ref (process path)
-CFDictionaryRef staticCodeCheck2(Process2* process, SecCSFlags flags, NSMutableDictionary* signingInfo)
+CFDictionaryRef staticCodeCheck2(Process22* process, SecCSFlags flags, NSMutableDictionary* signingInfo)
 {
     //status
     OSStatus status = !errSecSuccess;

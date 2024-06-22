@@ -103,36 +103,36 @@ NSCache* processCache = NULL;
     });
     
     //error?
-    if(ES_NEW_CLIENT_RESULT_SUCCESS != result)
-    {
-        //err msg
-        NSLog(@"ERROR: es_new_client() failed with %#x", result);
-        
-        //provide more info
-        switch (result) {
-                
-            //not entitled
-            case ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED:
-                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED: \"The caller is not properly entitled to connect\"");
-                break;
-                      
-            //not permitted
-            case ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED:
-                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED: \"The caller is not permitted to connect. They lack Transparency, Consent, and Control (TCC) approval form the user.\"");
-                break;
-                      
-            //not privileged
-            case ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED:
-                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED: \"The caller is not running as root\"");
-                break;
-                
-            default:
-                break;
-        }
-    
-        //bail
-        goto bail;
-    }
+//    if(ES_NEW_CLIENT_RESULT_SUCCESS != result)
+//    {
+//        //err msg
+//        NSLog(@"ERROR: es_new_client() failedddd with %#x", result);
+//        
+//        //provide more info
+//        switch (result) {
+//                
+//            //not entitled
+//            case ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED:
+//                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED: \"The caller is not properly entitled to connect\"");
+//                break;
+//                      
+//            //not permitted
+//            case ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED:
+//                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED: \"The caller is not permitted to connect. They lack Transparency, Consent, and Control (TCC) approval form the user.\"");
+//                break;
+//                      
+//            //not privileged
+//            case ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED:
+//                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED: \"The caller is not running as root\"");
+//                break;
+//                
+//            default:
+//                break;
+//        }
+//    
+//        //bail
+//        goto bail;
+//    }
     
     //clear cache
     if(ES_CLEAR_CACHE_RESULT_SUCCESS != es_clear_cache(endpointClientFM))

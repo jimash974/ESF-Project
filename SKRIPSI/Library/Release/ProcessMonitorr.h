@@ -31,14 +31,14 @@
 #define CS_STATIC_CHECK YES
 
 /* CLASSES */
-@class Process2;
+@class Process22;
 
 /* TYPEDEFS */
 
 //block for library
-typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
+typedef void (^ProcessCallbackBlock)(Process22* _Nonnull);
 
-@interface ProcessMonitor : NSObject
+@interface ProcessMonitorr : NSObject
 
 //start monitoring
 // pass in events of interest, count of said events, flag for codesigning, flag for environment variable collection, and callback
@@ -51,7 +51,7 @@ typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
 
 /* OBJECT: PROCESS */
 
-@interface Process2 : NSObject
+@interface Process22 : NSObject
 
 /* PROPERTIES */
 
@@ -67,6 +67,9 @@ typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
 //user id
 @property uid_t uid;
 
+//user id
+@property uid_t uidd;
+
 //event
 // exec, fork, exit
 @property u_int32_t event;
@@ -76,6 +79,9 @@ typedef void (^ProcessCallbackBlock)(Process2* _Nonnull);
 
 //exit code
 @property int exit;
+
+//user Client Class
+@property (nonatomic, retain)NSString* _Nullable userClientClass;
 
 //audit token
 @property(nonatomic, retain)NSData* _Nullable auditToken;

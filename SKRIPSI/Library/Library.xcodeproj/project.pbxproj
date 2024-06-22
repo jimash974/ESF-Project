@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B9F73E72C254BEF00857D1E /* ProcessMonitorr.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BB99BB12C24E53100FD6EF6 /* ProcessMonitorr.h */; };
+		1B9F73E92C254F6500857D1E /* ProcessMonitorr.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F73E82C254F6500857D1E /* ProcessMonitorr.m */; };
+		1B9F73EA2C260CBA00857D1E /* signing2.h in Headers */ = {isa = PBXBuildFile; fileRef = 581D675F2C047A71001900FE /* signing2.h */; };
 		581D67542BFF25BF001900FE /* ProcessMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D67522BFF25BF001900FE /* ProcessMonitor.m */; };
 		581D67552BFF25BF001900FE /* ProcessMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 581D67532BFF25BF001900FE /* ProcessMonitor.h */; };
 		581D675E2C0472EA001900FE /* Process2.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D675D2C0472EA001900FE /* Process2.m */; };
@@ -21,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B9F73E82C254F6500857D1E /* ProcessMonitorr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProcessMonitorr.m; sourceTree = "<group>"; };
+		1BB99BB12C24E53100FD6EF6 /* ProcessMonitorr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProcessMonitorr.h; sourceTree = "<group>"; };
 		581D67522BFF25BF001900FE /* ProcessMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessMonitor.m; sourceTree = "<group>"; };
 		581D67532BFF25BF001900FE /* ProcessMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessMonitor.h; sourceTree = "<group>"; };
 		581D675D2C0472EA001900FE /* Process2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Process2.m; sourceTree = "<group>"; };
@@ -67,12 +72,14 @@
 		CE91B741231A0E6D003273AF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1BB99BB12C24E53100FD6EF6 /* ProcessMonitorr.h */,
 				CDB7243A2374D915003A3364 /* File.m */,
 				CDB7243B2374D915003A3364 /* FileMonitor.h */,
 				CDB7243C2374D915003A3364 /* FileMonitor.m */,
 				CE91B74C231A129D003273AF /* Process.m */,
 				581D67532BFF25BF001900FE /* ProcessMonitor.h */,
 				581D67522BFF25BF001900FE /* ProcessMonitor.m */,
+				1B9F73E82C254F6500857D1E /* ProcessMonitorr.m */,
 				581D675D2C0472EA001900FE /* Process2.m */,
 				581D67602C047AA3001900FE /* signing2.m */,
 				CD68366E2394B50700CF19C1 /* signing.h */,
@@ -91,6 +98,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B9F73EA2C260CBA00857D1E /* signing2.h in Headers */,
+				1B9F73E72C254BEF00857D1E /* ProcessMonitorr.h in Headers */,
 				CD6836702394B50700CF19C1 /* signing.h in Headers */,
 				CDB7243E2374D915003A3364 /* FileMonitor.h in Headers */,
 				581D67552BFF25BF001900FE /* ProcessMonitor.h in Headers */,
@@ -124,7 +133,7 @@
 		CE91B737231A0E6D003273AF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = "Objective-See";
 				TargetAttributes = {
 					CE91B73E231A0E6D003273AF = {
@@ -175,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B9F73E92C254F6500857D1E /* ProcessMonitorr.m in Sources */,
 				581D67542BFF25BF001900FE /* ProcessMonitor.m in Sources */,
 				CDB7243F2374D915003A3364 /* FileMonitor.m in Sources */,
 				CD68366F2394B50700CF19C1 /* signing.m in Sources */,

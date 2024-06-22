@@ -5,7 +5,7 @@
 
 #import "signing2.h"
 #import "utilities.h"
-#import "ProcessMonitor.h"
+#import "ProcessMonitorr.h"
 
 //hash length
 // from: cs_blobs.h
@@ -22,7 +22,7 @@ extern pid_t (*getRPID)(pid_t pid);
 // get parent of arbitrary process
 pid_t getParentID(pid_t child);
 
-@implementation Process2
+@implementation Process22
 
 @synthesize pid;
 @synthesize exit;

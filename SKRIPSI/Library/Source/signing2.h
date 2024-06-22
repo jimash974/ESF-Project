@@ -10,7 +10,7 @@
 #ifndef Signing_h
 #define Signing_h
 
-#import "ProcessMonitor.h"
+#import "ProcessMonitorr.h"
 #import "FileMonitor.h"
 
 #import <AppKit/AppKit.h>
@@ -22,13 +22,13 @@
 //get the signing info of a item
 // pid specified: extract dynamic code signing info
 // path specified: generate static code signing info
-NSMutableDictionary* generateSigningInfo2(Process2* process, NSUInteger options, SecCSFlags flags);
+NSMutableDictionary* generateSigningInfo2(Process22* process, NSUInteger options, SecCSFlags flags);
 
 //extract signing info/check via dynamic code ref (process pid)
-CFDictionaryRef dynamicCodeCheck2(Process2* process, SecCSFlags flags, NSMutableDictionary* signingInfo);
+CFDictionaryRef dynamicCodeCheck2(Process22* process, SecCSFlags flags, NSMutableDictionary* signingInfo);
 
 //extact signing info/check via static code ref (process path)
-CFDictionaryRef staticCodeCheck2(Process2* process, SecCSFlags flags, NSMutableDictionary* signingInfo);
+CFDictionaryRef staticCodeCheck2(Process22* process, SecCSFlags flags, NSMutableDictionary* signingInfo);
 
 //determine who signed item
 NSNumber* extractSigner2(SecStaticCodeRef code, SecCSFlags flags, BOOL isDynamic);
