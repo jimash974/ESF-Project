@@ -226,7 +226,7 @@ bail:
             
         //close
         case ES_EVENT_TYPE_NOTIFY_CLOSE:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_CLOSEeee\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_CLOSE\","];
             break;
             
         //rename

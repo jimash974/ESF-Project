@@ -531,21 +531,21 @@ bail:
     {
         //exec
         case ES_EVENT_TYPE_NOTIFY_EXEC:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXECCCC\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXEC\","];
             break;
             
         //fork
         case ES_EVENT_TYPE_NOTIFY_FORK:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORkkkkK\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORK\","];
             break;
             
         //exit
         case ES_EVENT_TYPE_NOTIFY_EXIT:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXItttT\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXIT\","];
             break;
             
         case ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_IOKIT_OPEnnN\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN\","];
             break;
             
         default:
