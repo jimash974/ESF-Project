@@ -231,21 +231,21 @@ bail:
             
         //rename
         case ES_EVENT_TYPE_NOTIFY_RENAME:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_RENAMEee\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_RENAME\","];
             break;
             
         //link
         case ES_EVENT_TYPE_NOTIFY_LINK:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_LINkkK\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_LINK\","];
             break;
             
         //unlink
         case ES_EVENT_TYPE_NOTIFY_UNLINK:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_UNLINkkK\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_UNLINK\","];
             break;
             
         case ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTEddD\","];
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED\","];
             break;   
         default:
             break;

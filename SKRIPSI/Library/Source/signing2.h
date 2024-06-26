@@ -1,12 +1,3 @@
-//
-//  File: Signing.h
-//  Project: ProcessMonitor
-//
-//  Created by: Patrick Wardle
-//  Copyright:  2017 Objective-See
-//  License:    Creative Commons Attribution-NonCommercial 4.0 International License
-//
-
 #ifndef Signing_h
 #define Signing_h
 

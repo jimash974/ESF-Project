@@ -89,11 +89,22 @@ BOOL fileMonitor(){
 //        LOCKBIT
             if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME){
                 if([file.destinationPath hasSuffix:@".lockbit"] == YES){
+                    LB_Pid = file.process.pid;
                     printf("Lockbit Detected\nLockBit Extension detected\n\n");
                     printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
                     return;
                 }
             }
+        
+//        LOCKBIT
+        if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+//            printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+            if(([file.destinationPath rangeOfString:@"Restore"].location != NSNotFound) && (LB_Pid == file.process.pid)){
+                printf("Lockbit Detected\nCreation of restore file\n\n");
+                printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                return;
+            }
+        }
         
 //        GIMICK
             if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
@@ -138,7 +149,7 @@ BOOL fileMonitor(){
             }
         
 //        KEYLOGGER
-        if(([file.destinationPath hasSuffix:@"IOHIDLib.plugin"] == YES) && (file.process.isPlatformBinary == 0)){
+        if(([file.destinationPath hasSuffix:@"IOHIDLib.plugin"] == YES) && (![file.process.isPlatformBinary boolValue])){
             printf("Keylogger Detected\nAccess to IOHIDLib.plugin\n\n");
             printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
             return;
@@ -203,22 +214,28 @@ BOOL processMonitorr()
                 }
             }
 
-        
+//        ATOMIC STEALER
             if(YES == [process.name isEqualToString:@"dscl"] && (process.arguments.count > 2) && (AS_Pid == process.ppid)){
-                NSString *ioc1 = process.arguments[1];
-                NSString *ioc2 = process.arguments[2];
+                bool ioc1 = false;
+                bool ioc2 = false;
                 
-                if(([ioc1 rangeOfString:@"Local"].location != NSNotFound) && ([ioc1 rangeOfString:@"Default"].location != NSNotFound) && ([ioc2 rangeOfString:@"-authonly"].location != NSNotFound)){
-                    AS_Ioc_Count = 2;
-                    printf("Atomic Stealer Detected\nAccount Validation using dscl\n\n");
-                    printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
-                    return;
+                for(NSString* string in process.arguments){
+                    if([string rangeOfString:@"Local/Default"].location != NSNotFound){
+                        ioc1 = true;
+                    }
+                    else if ([string rangeOfString:@"-authonly"].location != NSNotFound){
+                        ioc2 = true;
+                    }
+                    
+                    if(ioc1 && ioc2){
+                        printf("Atomic Stealer Detected\nAccount Validation using dscl\n\n");
+                        printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
+                        break;
+                    }
                 }
             }
-//        }
         
-        
-//        if(VPN_Ioc_Count == 1){
+//        VPN
             if(process.event == ES_EVENT_TYPE_NOTIFY_EXEC){
                 for(NSString* string in process.arguments){
                     if([string rangeOfString:@"46.137.201.254"].location != NSNotFound){
@@ -235,6 +252,7 @@ BOOL processMonitorr()
                 return;
             }
         
+//        KEYLOGGER
         if(process.event == ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN){
 
             if((([process.userClientClass rangeOfString:@"IOHIDLibUserClient"].location != NSNotFound) || ([process.userClientClass rangeOfString:@"IOHIDParamUserClient"].location != NSNotFound)) && (![process.isPlatformBinary boolValue])){
