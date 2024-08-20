@@ -30,6 +30,8 @@ NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, S
     //extract status
     status = [signingInfo[KEY_SIGNATURE_STATUS] intValue];
     
+
+    
     //on (certain) errors
     // do static, if option is set
     if( (csStatic == options) &&
@@ -53,6 +55,12 @@ NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, S
     if(errSecSuccess != [signingInfo[KEY_SIGNATURE_STATUS] intValue])
     {
         //bail
+//        NSLog(@" Status: %d", (int)status);
+//        NSLog(@" Status: %@", (id)signingInfo[KEY_SIGNATURE_STATUS]);
+//        printf("\n\nFAILED\n\n");
+//        printf("%s\n\n", process.name.UTF8String);
+
+        
         goto bail;
     }
     

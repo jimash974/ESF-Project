@@ -80,28 +80,34 @@ BOOL fileMonitor(){
         
 //        ATOMIC STEALER
             if(([file.destinationPath hasSuffix:@"login.keychain-db"] == YES) && (![file.process.isPlatformBinary boolValue])){
-                printf("Atomic Stealer Detected\nAcess To Logiin Keychain File\n\n");
-                printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                    printf("Atomic Stealer Detected\nAcess To Login Keychain File\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                }
                 return;
             }
         
         
 //        LOCKBIT
-            if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME){
+            if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME && (![file.process.isPlatformBinary boolValue])){
                 if([file.destinationPath hasSuffix:@".lockbit"] == YES){
-                    LB_Pid = file.process.pid;
-                    printf("Lockbit Detected\nLockBit Extension detected\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
-                    return;
+                    if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                        LB_Pid = file.process.pid;
+                        printf("Lockbit Detected\nLockBit Extension detected\n\n");
+                        printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                        return;
+                    }
                 }
             }
         
 //        LOCKBIT
-        if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
+        if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE && (![file.process.isPlatformBinary boolValue])){
 //            printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
             if(([file.destinationPath rangeOfString:@"Restore"].location != NSNotFound) && (LB_Pid == file.process.pid)){
-                printf("Lockbit Detected\nCreation of restore file\n\n");
-                printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                    printf("Lockbit Detected\nCreation of restore file\n\n");
+                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                }
                 return;
             }
         }
@@ -109,56 +115,55 @@ BOOL fileMonitor(){
 //        GIMICK
             if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
                 if((([file.destinationPath rangeOfString:@"root"].location != NSNotFound) && ([file.destinationPath rangeOfString:@"CorelDRAW"].location != NSNotFound)) && (![file.process.isPlatformBinary boolValue])){
-                    printf("Gimick Detected\nMalicious Folder Created\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
-                }
-            }
-        
-//        GIMICK
-            if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
-                if((YES == [file.destinationPath isEqualToString:@"/Library/LaunchDaemons/.dat.nosyns2638.RKoEMI"]) && (![file.process.isPlatformBinary boolValue])){
-                    printf("Gimick Detected\nLaunch Daemons Created\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                    
+                    if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                        printf("Gimick Detected\nMalicious Folder Created\n\n");
+                        printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                        return;
+                    }
                 }
             }
         
 //        GIMICK
             if(file.event == ES_EVENT_TYPE_NOTIFY_RENAME){
                 if((YES == [file.destinationPath hasPrefix:@"/Library/LaunchDaemons/com.CorelDRAW.va.plist"]) && (![file.process.isPlatformBinary boolValue])){
-                    printf("Gimick Detected\nLaunch Daemons Renamed\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                    
+                    if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                        printf("Gimick Detected\nLaunch Daemons Renamed\n\n");
+                        printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                        return;
+                    }
                 }
             }
         
 //        VPN TROJAN
             if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
-                if(YES == [file.destinationPath hasSuffix:@".androids"]){
-                    printf("VPN Trojan Detected\nCreation Of Hidden Folder\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
-                    return;
+                if(YES == [file.destinationPath hasSuffix:@".androids"] && (![file.process.isPlatformBinary boolValue])){
+                    
+                    if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                        printf("VPN Trojan Detected\nCreation Of Hidden Folder\n\n");
+                        printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                        return;
+                    }
                 }
             }
         
 //        VPN TOJAN
             if(file.event == ES_EVENT_TYPE_NOTIFY_CREATE){
-                if((YES == [file.destinationPath hasSuffix:@"softwareupdated"]) || (YES == [file.destinationPath hasSuffix:@"covid"])){
-                    printf("VPN Detected Trojan\nCreation of Malicious File\n\n");
-                    printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
-                    return;
+                if(((YES == [file.destinationPath hasSuffix:@"softwareupdated"]) || (YES == [file.destinationPath hasSuffix:@"covid"])) &&  (![file.process.isPlatformBinary boolValue])){
+                    
+                    if((([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([file.process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([file.process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0)){
+                        printf("VPN Detected Trojan\nCreation of Malicious File\n\n");
+                        printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
+                        return;
+                    }
                 }
             }
         
-//        KEYLOGGER
-        if(([file.destinationPath hasSuffix:@"IOHIDLib.plugin"] == YES) && (![file.process.isPlatformBinary boolValue])){
-            printf("Keylogger Detected\nAccess to IOHIDLib.plugin\n\n");
-            printf("%s\n\n\n", prettifyJSON(file.description).UTF8String);
-            return;
-        }
-        
-        if (YES == all){
-            printf("FILE\n");
-            printf("%s\n", prettifyJSON(file.description).UTF8String);
-        }
+//        if (YES == all){
+//            printf("FILE\n");
+//            printf("%s\n", prettifyJSON(file.description).UTF8String);
+//        }
     
     };
     return [monitor start:events count:sizeof(events)/sizeof(events[0]) csOption:csStatic callback:block];
@@ -256,9 +261,13 @@ BOOL processMonitorr()
         if(process.event == ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN){
 
             if((([process.userClientClass rangeOfString:@"IOHIDLibUserClient"].location != NSNotFound) || ([process.userClientClass rangeOfString:@"IOHIDParamUserClient"].location != NSNotFound)) && (![process.isPlatformBinary boolValue])){
-                printf("Keylogger Detected\nIOHDILibUserClient Process detected \n\n");
-                printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
-                return;
+                
+                if((([process.signingInfo[KEY_SIGNATURE_STATUS] intValue] == 0) && ([process.signingInfo[KEY_SIGNING_IS_NOTARIZED] intValue] == 0)) || ([process.signingInfo[KEY_SIGNATURE_STATUS] intValue] < 0))
+                {
+                    printf("Keylogger Detected\nIOHDILibUserClient Process detected \n\n");
+                    printf("%s\n\n\n", prettifyJSON(process.description).UTF8String);
+                    return;
+                }
             }
         }
     };
